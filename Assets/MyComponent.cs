@@ -51,9 +51,9 @@ public class MyComponent : MonoBehaviour {
             myClient.Configure(Topology);
             myClient.RegisterHandler(MsgType.Connect, OnConnected);
             myClient.RegisterHandler(1000, getInfoTexture);
-            myClient.Connect("192.168.20.16", 4444);
-            UIImage.texture = new Texture2D(640, 480, TextureFormat.RGB24, false);
+            myClient.Connect("192.168.20.24", 4444);
         }
+        UIImage.texture = new Texture2D(640, 480, TextureFormat.RGB24, false);
         lastTime = Time.time;
     }
     /// <summary>
@@ -87,7 +87,7 @@ public class MyComponent : MonoBehaviour {
     void getInfoTexture(NetworkMessage msg)
     {
         TextureInfoMessage msg2 = msg.ReadMessage<TextureInfoMessage>();
-        ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
+        if(msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
     }
     /// <summary>
     /// Called when app is paused / resumed
@@ -121,7 +121,7 @@ public class MyComponent : MonoBehaviour {
                     imageInfo += " size: " + image.Width + " x " + image.Height + "\n";
                     imageInfo += " bufferSize: " + image.BufferWidth + " x " + image.BufferHeight + "\n";
                     imageInfo += " stride: " + image.Stride;
-                    Debug.Log(imageInfo);
+                    //Debug.Log(imageInfo);
                     tex = new Texture2D(image.Width, image.Height, TextureFormat.RGB24, false);
                     tex.filterMode = FilterMode.Point;
                     image.CopyToTexture(tex);
@@ -148,12 +148,12 @@ public class MyComponent : MonoBehaviour {
                             myClient.SendByChannel(1000, msg, channel);
                         }
                     }
-                    Color[] pixels = tex.GetPixels();//image.Pixels;
+                    /*Color[] pixels = tex.GetPixels();//image.Pixels;
                     //UIImage.sprite = Sprite.Create(tex, new Rect(0, 0, image.Width, image.Height), Vector2.zero);
                     if (pixels != null && pixels.Length > 0)
                     {
                         Debug.Log("Image pixels: " + pixels[0] + "," + pixels[1] + "," + pixels[2] + ",...");
-                    }
+                    }*/
                 }
             }
         }
