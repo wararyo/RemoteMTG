@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vuforia;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class MyComponent : MonoBehaviour {
 
     private bool mAccessCameraImage = true;
-    public UnityEngine.UI.Image UIImage;
     Texture2D tex;
+
+    public bool isServer = false;
+    float lastTime;
+    int channel;
+    private bool connected = false;
+    NetworkClient myClient;
+    public RawImage UIImage;
 
     // The desired camera image pixel format
     private Vuforia.Image.PIXEL_FORMAT mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGBA8888;// or RGBA8888, RGB888, RGB565, YUV
@@ -20,6 +27,33 @@ public class MyComponent : MonoBehaviour {
         VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
         VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
         VuforiaARController.Instance.RegisterTrackablesUpdatedCallback(OnTrackablesUpdated);
+
+        //Network
+        if(isServer)
+        {
+            ConnectionConfig Config = new ConnectionConfig();
+            Config.AddChannel(QosType.Reliable);
+            Config.AddChannel(QosType.Unreliable);
+            channel = Config.AddChannel(QosType.ReliableFragmented);
+            HostTopology Topology = new HostTopology(Config, 1);
+            NetworkServer.Configure(Topology);
+            NetworkServer.Listen(4444);
+            lastTime = Time.time;
+        }
+        else
+        {
+            myClient = new NetworkClient();
+            ConnectionConfig Config = new ConnectionConfig();
+            Config.AddChannel(QosType.Reliable);
+            Config.AddChannel(QosType.Unreliable);
+            Config.AddChannel(QosType.ReliableFragmented);
+            HostTopology Topology = new HostTopology(Config, 2);
+            myClient.Configure(Topology);
+            myClient.RegisterHandler(MsgType.Connect, OnConnected);
+            myClient.RegisterHandler(1000, getInfoTexture);
+            myClient.Connect("127.0.0.1", 4444);
+            UIImage.texture = new Texture2D(640, 480, TextureFormat.RGB24, false);
+        }
     }
     /// <summary>
     /// Called when Vuforia is started
@@ -39,6 +73,20 @@ public class MyComponent : MonoBehaviour {
                 "\n consider using a different pixel format.");
             mFormatRegistered = false;
         }
+    }
+    /// <summary>
+    /// Called when network is connected
+    /// </summary>
+    /// <param name="netMsg"></param>
+    void OnConnected(NetworkMessage netMsg) { connected = true; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="msg"></param>
+    void getInfoTexture(NetworkMessage msg)
+    {
+        TextureInfoMessage msg2 = msg.ReadMessage<TextureInfoMessage>();
+        ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
     }
     /// <summary>
     /// Called when app is paused / resumed
@@ -73,13 +121,20 @@ public class MyComponent : MonoBehaviour {
                     imageInfo += " bufferSize: " + image.BufferWidth + " x " + image.BufferHeight + "\n";
                     imageInfo += " stride: " + image.Stride;
                     Debug.Log(imageInfo);
-                    tex = new Texture2D(image.Width, image.Height, TextureFormat.RGBA32, false);
+                    tex = new Texture2D(image.Width, image.Height, TextureFormat.RGB24, false);
                     tex.filterMode = FilterMode.Point;
                     image.CopyToTexture(tex);
-                    Debug.Log("JPG :" + tex.EncodeToJPG(50).Length);
                     tex.Apply();
+                    byte[] jpg = tex.EncodeToJPG(50);
+                    //((Texture2D)(UIImage.texture)).LoadImage(jpg);
+                    if (NetworkServer.connections.Count > 0 && Time.time - lastTime > 0.04)
+                    {
+                        lastTime = Time.time;
+                        TextureInfoMessage msg = new TextureInfoMessage(jpg);
+                        NetworkServer.connections[1].SendByChannel(1000, msg, channel);
+                    }
                     Color[] pixels = tex.GetPixels();//image.Pixels;
-                    UIImage.sprite = Sprite.Create(tex, new Rect(0, 0, image.Width, image.Height), Vector2.zero);
+                    //UIImage.sprite = Sprite.Create(tex, new Rect(0, 0, image.Width, image.Height), Vector2.zero);
                     if (pixels != null && pixels.Length > 0)
                     {
                         Debug.Log("Image pixels: " + pixels[0] + "," + pixels[1] + "," + pixels[2] + ",...");
