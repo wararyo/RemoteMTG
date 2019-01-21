@@ -37,8 +37,8 @@ public class MyComponent : MonoBehaviour {
             channel = Config.AddChannel(QosType.ReliableFragmented);
             HostTopology Topology = new HostTopology(Config, 1);
             NetworkServer.Configure(Topology);
+            NetworkServer.RegisterHandler(1000, getInfoTexture);
             NetworkServer.Listen(4444);
-            lastTime = Time.time;
         }
         else
         {
@@ -46,14 +46,15 @@ public class MyComponent : MonoBehaviour {
             ConnectionConfig Config = new ConnectionConfig();
             Config.AddChannel(QosType.Reliable);
             Config.AddChannel(QosType.Unreliable);
-            Config.AddChannel(QosType.ReliableFragmented);
+            channel = Config.AddChannel(QosType.ReliableFragmented);
             HostTopology Topology = new HostTopology(Config, 2);
             myClient.Configure(Topology);
             myClient.RegisterHandler(MsgType.Connect, OnConnected);
             myClient.RegisterHandler(1000, getInfoTexture);
-            myClient.Connect("127.0.0.1", 4444);
+            myClient.Connect("192.168.20.16", 4444);
             UIImage.texture = new Texture2D(640, 480, TextureFormat.RGB24, false);
         }
+        lastTime = Time.time;
     }
     /// <summary>
     /// Called when Vuforia is started
@@ -127,11 +128,25 @@ public class MyComponent : MonoBehaviour {
                     tex.Apply();
                     byte[] jpg = tex.EncodeToJPG(50);
                     //((Texture2D)(UIImage.texture)).LoadImage(jpg);
-                    if (NetworkServer.connections.Count > 0 && Time.time - lastTime > 0.04)
+
+                    //Networking
+                    if (isServer)
                     {
-                        lastTime = Time.time;
-                        TextureInfoMessage msg = new TextureInfoMessage(jpg);
-                        NetworkServer.connections[1].SendByChannel(1000, msg, channel);
+                        if (NetworkServer.connections.Count > 0 && Time.time - lastTime > 0.04)
+                        {
+                            lastTime = Time.time;
+                            TextureInfoMessage msg = new TextureInfoMessage(jpg);
+                            NetworkServer.connections[1].SendByChannel(1000, msg, channel);
+                        }
+                    }
+                    else
+                    {
+                        if(myClient.connection.isConnected && Time.time - lastTime > 0.04)
+                        {
+                            lastTime = Time.time;
+                            TextureInfoMessage msg = new TextureInfoMessage(jpg);
+                            myClient.SendByChannel(1000, msg, channel);
+                        }
                     }
                     Color[] pixels = tex.GetPixels();//image.Pixels;
                     //UIImage.sprite = Sprite.Create(tex, new Rect(0, 0, image.Width, image.Height), Vector2.zero);
