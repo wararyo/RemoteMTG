@@ -80,22 +80,23 @@ public class MyComponent : MonoBehaviour {
     /// Called when network is connected
     /// </summary>
     /// <param name="netMsg"></param>
-    void OnConnected(NetworkMessage netMsg) { connected = true; }
+    void OnConnected(NetworkMessage netMsg) { connected = true; Debug.Log("connected"); }
     /// <summary>
     /// 
     /// </summary>
     /// <param name="msg"></param>
     void getInfoTexture(NetworkMessage msg)
     {
+        Debug.Log("hoge");
         TextureInfoMessage msg2 = msg.ReadMessage<TextureInfoMessage>();
-        text.text = "";
+        //text.text = "";
         // Iterate through the list of active trackables
-        text.text += "List of trackables currently active (tracked): \n";
+        /*text.text += "List of trackables currently active (tracked): \n";
         foreach (ActiveTrackableInfo t in msg2.activeTrackables)
         {
             text.text += "Trackable: " + t.name + "\n";
             Debug.Log("Trackable: " + t.name);
-        }
+        }*/
         if (msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
     }
     /// <summary>
@@ -149,13 +150,13 @@ public class MyComponent : MonoBehaviour {
                         trackables.Add(new ActiveTrackableInfo(tb.Trackable.ID, tb.TrackableName, tb.transform));
                     }
 
-                    lastTime = Time.time;
                     TextureInfoMessage msg = new TextureInfoMessage(jpg, trackables);
 
                     if (isServer)
                     {
                         if (NetworkServer.connections.Count > 0 && Time.time - lastTime > 0.04)
                         {
+                            lastTime = Time.time;
                             NetworkServer.connections[1].SendByChannel(1000, msg, channel);
                         }
                     }
@@ -163,9 +164,12 @@ public class MyComponent : MonoBehaviour {
                     {
                         if(myClient.connection.isConnected && Time.time - lastTime > 0.04)
                         {
+                            lastTime = Time.time;
                             myClient.SendByChannel(1000, msg, channel);
+                            
                         }
                     }
+                    Debug.Log("hoge" + trackables.Count);
                 }
             }
         }
