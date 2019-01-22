@@ -89,14 +89,14 @@ public class MyComponent : MonoBehaviour {
     {
         Debug.Log("hoge");
         TextureInfoMessage msg2 = msg.ReadMessage<TextureInfoMessage>();
-        //text.text = "";
+        text.text = "";
         // Iterate through the list of active trackables
-        /*text.text += "List of trackables currently active (tracked): \n";
+        text.text += "List of trackables currently active (tracked): \n";
         foreach (ActiveTrackableInfo t in msg2.activeTrackables)
         {
             text.text += "Trackable: " + t.name + "\n";
             Debug.Log("Trackable: " + t.name);
-        }*/
+        }
         if (msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
     }
     /// <summary>
