@@ -15,8 +15,10 @@ public class MyComponent : MonoBehaviour {
     int channel;
     private bool connected = false;
     NetworkClient myClient;
+
     public RawImage UIImage;
     public Text text;
+    public string IPAddress;
 
     // The desired camera image pixel format
     private Vuforia.Image.PIXEL_FORMAT mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGBA8888;// or RGBA8888, RGB888, RGB565, YUV
@@ -52,7 +54,7 @@ public class MyComponent : MonoBehaviour {
             myClient.Configure(Topology);
             myClient.RegisterHandler(MsgType.Connect, OnConnected);
             myClient.RegisterHandler(1000, getInfoTexture);
-            myClient.Connect("192.168.20.24", 4444);
+            myClient.Connect(IPAddress, 4444);
         }
         UIImage.texture = new Texture2D(640, 480, TextureFormat.RGB24, false);
         lastTime = Time.time;
