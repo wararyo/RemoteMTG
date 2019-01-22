@@ -6,6 +6,7 @@ using Vuforia;
 
 public class TextureInfoMessage : MessageBase {
     public byte[] textureData;
+    [System.NonSerialized]
     public List<ActiveTrackableInfo> activeTrackables;
     public TextureInfoMessage() { }
     public TextureInfoMessage(byte[] d) { textureData = d; }
