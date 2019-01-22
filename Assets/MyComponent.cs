@@ -92,9 +92,10 @@ public class MyComponent : MonoBehaviour {
         text.text = "";
         // Iterate through the list of active trackables
         text.text += "List of trackables currently active (tracked): \n";
-        foreach (TrackableBehaviour tb in msg2.activeTrackables)
+        foreach (Trackable t in msg2.activeTrackables)
         {
-            text.text += "Trackable: " + tb.TrackableName + "\n";
+            text.text += "Trackable: " + t.Name + "\n";
+            Debug.Log("Trackable: " + t.Name);
         }
     }
     /// <summary>
@@ -142,16 +143,18 @@ public class MyComponent : MonoBehaviour {
                     // Get the Vuforia StateManager
                     StateManager sm = TrackerManager.Instance.GetStateManager();
                     IEnumerable<TrackableBehaviour> activeTrackables = sm.GetActiveTrackableBehaviours();
+                    List<Trackable> trackables = new List<Trackable>();
 
                     // Iterate through the list of active trackables
-                    Debug.Log("List of trackables currently active (tracked): ");
+                    //Debug.Log("List of trackables currently active (tracked): ");
                     foreach (TrackableBehaviour tb in activeTrackables)
                     {
-                        Debug.Log("Trackable: " + tb.TrackableName);
+                        //Debug.Log("Trackable: " + tb.TrackableName);
+                        trackables.Add(tb.Trackable);
                     }
 
                     lastTime = Time.time;
-                    TextureInfoMessage msg = new TextureInfoMessage(jpg, activeTrackables);
+                    TextureInfoMessage msg = new TextureInfoMessage(jpg, trackables);
 
                     if (isServer)
                     {
