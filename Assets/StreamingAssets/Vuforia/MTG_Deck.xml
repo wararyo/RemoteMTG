@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
+    <ImageTarget name="Saproling" size="1.000000 1.397288" />
+    <ImageTarget name="Plains4" size="1.000000 1.395129" />
+    <ImageTarget name="Forest6" size="1.000000 1.397288" />
+    <ImageTarget name="Plains3" size="1.000000 1.394576" />
+    <ImageTarget name="ConclaveTribunalPromo" size="1.000000 1.394719" />
+    <ImageTarget name="KnightOfAutumnFoil" size="1.000000 1.400406" />
+    <ImageTarget name="SiegeWurm" size="1.000000 1.397696" />
+    <ImageTarget name="TrostaniDiscordant" size="1.000000 1.394042" />
+    <ImageTarget name="ConclaveTribunal" size="1.000000 1.393898" />
+    <ImageTarget name="Plains2" size="1.000000 1.393365" />
+    <ImageTarget name="HealersHawk" size="1.000000 1.400000" />
+    <ImageTarget name="Forest5" size="1.000000 1.393631" />
+    <ImageTarget name="Forest4" size="1.000000 1.394433" />
+    <ImageTarget name="Plains" size="1.000000 1.393243" />
+    <ImageTarget name="TempleGarden" size="1.000000 1.393099" />
+    <ImageTarget name="Forest3" size="1.000000 1.389189" />
+    <ImageTarget name="SettleTheWreckage" size="1.000000 1.394452" />
+    <ImageTarget name="HealersHawkFoil" size="1.000000 1.401356" />
+    <ImageTarget name="SunpetalGrove" size="1.000000 1.400950" />
+    <ImageTarget name="EmmaraSoulOfTheAccord" size="1.000000 1.397835" />
+    <ImageTarget name="Island5" size="1.000000 1.400000" />
+    <ImageTarget name="Island4" size="1.000000 1.400680" />
+    <ImageTarget name="DragonskullSummit" size="1.000000 1.395664" />
+    <ImageTarget name="Island3" size="1.000000 1.396201" />
+    <ImageTarget name="BeaconBolt" size="1.000000 1.392542" />
+    <ImageTarget name="Mountain4" size="1.000000 1.393220" />
+    <ImageTarget name="Mountain3" size="1.000000 1.398915" />
+    <ImageTarget name="Island2" size="1.000000 1.399188" />
+    <ImageTarget name="LavaCoil" size="1.000000 1.399322" />
+    <ImageTarget name="Shock" size="1.000000 1.395649" />
+    <ImageTarget name="Mountain2" size="1.000000 1.393631" />
+    <ImageTarget name="FiremindsResearch" size="1.000000 1.394309" />
+    <ImageTarget name="Mountain" size="1.000000 1.393365" />
+    <ImageTarget name="DrownedCatacomb" size="1.000000 1.394576" />
+    <ImageTarget name="SteamVents" size="1.000000 1.392011" />
+    <ImageTarget name="WarlordsFury" size="1.000000 1.395522" />
+    <ImageTarget name="EnigmaDrake" size="1.000000 1.397558" />
+    <ImageTarget name="Island" size="1.000000 1.399322" />
+    <ImageTarget name="SulfurFalls" size="1.000000 1.394844" />
+    <ImageTarget name="Opt" size="1.000000 1.392954" />
+    <ImageTarget name="CrashThrough" size="1.000000 1.396610" />
+    <ImageTarget name="MaximizeVelocity" size="1.000000 1.390921" />
+    <ImageTarget name="DiscoveryDispersal" size="1.000000 0.715605" />
+    <ImageTarget name="RadicalIdea" size="1.000000 1.399593" />
+    <ImageTarget name="SaprolingMigration" size="1.000000 1.397149" />
+    <ImageTarget name="SongOfFreyalise" size="1.000000 1.390921" />
+    <ImageTarget name="DawnOfHope" size="1.000000 1.396201" />
+    <ImageTarget name="Forest2" size="1.000000 1.394986" />
+    <ImageTarget name="LlanowarElves" size="1.000000 1.398104" />
+    <ImageTarget name="ArchOfOrazca" size="1.000000 1.398104" />
+    <ImageTarget name="LoxodonRestorer" size="1.000000 1.397558" />
+    <ImageTarget name="KnightOfAutumn" size="1.000000 1.399052" />
+    <ImageTarget name="Forest" size="1.000000 1.392157" />
+    <ImageTarget name="SwornCompanions" size="1.000000 1.394844" />
     <ImageTarget name="Soldier2" size="1.000000 1.396470" />
     <ImageTarget name="CracklingDrake" size="1.000000 1.400678" />
     <ImageTarget name="Soldier" size="1.000000 1.396470" />
