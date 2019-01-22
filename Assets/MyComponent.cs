@@ -16,6 +16,7 @@ public class MyComponent : MonoBehaviour {
     private bool connected = false;
     NetworkClient myClient;
     public RawImage UIImage;
+    public Text text;
 
     // The desired camera image pixel format
     private Vuforia.Image.PIXEL_FORMAT mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGBA8888;// or RGBA8888, RGB888, RGB565, YUV
@@ -88,6 +89,13 @@ public class MyComponent : MonoBehaviour {
     {
         TextureInfoMessage msg2 = msg.ReadMessage<TextureInfoMessage>();
         if(msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
+        text.text = "";
+        // Iterate through the list of active trackables
+        text.text += "List of trackables currently active (tracked): \n";
+        foreach (TrackableBehaviour tb in msg2.activeTrackables)
+        {
+            text.text += "Trackable: " + tb.TrackableName + "\n";
+        }
     }
     /// <summary>
     /// Called when app is paused / resumed
@@ -130,12 +138,25 @@ public class MyComponent : MonoBehaviour {
                     //((Texture2D)(UIImage.texture)).LoadImage(jpg);
 
                     //Networking
+
+                    // Get the Vuforia StateManager
+                    StateManager sm = TrackerManager.Instance.GetStateManager();
+                    IEnumerable<TrackableBehaviour> activeTrackables = sm.GetActiveTrackableBehaviours();
+
+                    // Iterate through the list of active trackables
+                    Debug.Log("List of trackables currently active (tracked): ");
+                    foreach (TrackableBehaviour tb in activeTrackables)
+                    {
+                        Debug.Log("Trackable: " + tb.TrackableName);
+                    }
+
+                    lastTime = Time.time;
+                    TextureInfoMessage msg = new TextureInfoMessage(jpg, activeTrackables);
+
                     if (isServer)
                     {
                         if (NetworkServer.connections.Count > 0 && Time.time - lastTime > 0.04)
                         {
-                            lastTime = Time.time;
-                            TextureInfoMessage msg = new TextureInfoMessage(jpg);
                             NetworkServer.connections[1].SendByChannel(1000, msg, channel);
                         }
                     }
@@ -143,17 +164,9 @@ public class MyComponent : MonoBehaviour {
                     {
                         if(myClient.connection.isConnected && Time.time - lastTime > 0.04)
                         {
-                            lastTime = Time.time;
-                            TextureInfoMessage msg = new TextureInfoMessage(jpg);
                             myClient.SendByChannel(1000, msg, channel);
                         }
                     }
-                    /*Color[] pixels = tex.GetPixels();//image.Pixels;
-                    //UIImage.sprite = Sprite.Create(tex, new Rect(0, 0, image.Width, image.Height), Vector2.zero);
-                    if (pixels != null && pixels.Length > 0)
-                    {
-                        Debug.Log("Image pixels: " + pixels[0] + "," + pixels[1] + "," + pixels[2] + ",...");
-                    }*/
                 }
             }
         }
