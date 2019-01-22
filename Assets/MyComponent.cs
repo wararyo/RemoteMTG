@@ -88,15 +88,15 @@ public class MyComponent : MonoBehaviour {
     void getInfoTexture(NetworkMessage msg)
     {
         TextureInfoMessage msg2 = msg.ReadMessage<TextureInfoMessage>();
-        if(msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
         text.text = "";
         // Iterate through the list of active trackables
         text.text += "List of trackables currently active (tracked): \n";
-        foreach (Trackable t in msg2.activeTrackables)
+        foreach (ActiveTrackableInfo t in msg2.activeTrackables)
         {
-            text.text += "Trackable: " + t.Name + "\n";
-            Debug.Log("Trackable: " + t.Name);
+            text.text += "Trackable: " + t.name + "\n";
+            Debug.Log("Trackable: " + t.name);
         }
+        if (msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
     }
     /// <summary>
     /// Called when app is paused / resumed
@@ -143,14 +143,10 @@ public class MyComponent : MonoBehaviour {
                     // Get the Vuforia StateManager
                     StateManager sm = TrackerManager.Instance.GetStateManager();
                     IEnumerable<TrackableBehaviour> activeTrackables = sm.GetActiveTrackableBehaviours();
-                    List<Trackable> trackables = new List<Trackable>();
-
-                    // Iterate through the list of active trackables
-                    //Debug.Log("List of trackables currently active (tracked): ");
+                    List<ActiveTrackableInfo> trackables = new List<ActiveTrackableInfo>();
                     foreach (TrackableBehaviour tb in activeTrackables)
                     {
-                        //Debug.Log("Trackable: " + tb.TrackableName);
-                        trackables.Add(tb.Trackable);
+                        trackables.Add(new ActiveTrackableInfo(tb.Trackable.ID, tb.TrackableName, tb.transform));
                     }
 
                     lastTime = Time.time;
