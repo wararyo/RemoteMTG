@@ -171,12 +171,13 @@ public class MyComponent : MonoBehaviour {
 
                     TextureInfoMessage msg = new TextureInfoMessage(jpg, trackables);
 
+                    bool isSent = false;
                     if (isServer)
                     {
                         if (NetworkServer.connections.Count > 0 && Time.time - lastTime > 0.1)
                         {
                             lastTime = Time.time;
-                            NetworkServer.connections[1].SendByChannel(1000, msg, channel);
+                            isSent = NetworkServer.connections[1].SendByChannel(1000, msg, channel);
                         }
                     }
                     else
@@ -184,11 +185,11 @@ public class MyComponent : MonoBehaviour {
                         if(myClient.connection.isConnected && Time.time - lastTime > 0.1)
                         {
                             lastTime = Time.time;
-                            myClient.SendByChannel(1000, msg, channel);
+                            isSent = myClient.SendByChannel(1000, msg, channel);
                             
                         }
                     }
-                    trackables.Clear();
+                    if(isSent) trackables.Clear();
                     //Debug.Log("hoge" + trackables.Count);
                 }
             }
