@@ -112,7 +112,7 @@ public class MyComponent : MonoBehaviour {
 
             Debug.Log("Trackable: " + t.name);
             GameObject go = Instantiate(UIImagePrefab, layoutGroup.transform);
-            Sprite sprite = Resources.Load<Sprite>("CardImages/CracklingDrake");//"Assets/CardImages/" + t.name + ".jpg") as Sprite;
+            Sprite sprite = Resources.Load<Sprite>("CardImages/" + t.name);
             go.GetComponent<UnityEngine.UI.Image>().sprite = sprite;
         }
         if (msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
