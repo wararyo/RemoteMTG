@@ -86,7 +86,7 @@ public class MyComponent : MonoBehaviour {
 
         foreach (TrackableBehaviour tb in TrackerManager.Instance.GetStateManager().GetTrackableBehaviours())
         {
-            tb.gameObject.AddComponent<MyTrackableEventHandler>();
+            tb.gameObject.AddComponent<MyTrackableEventHandler>().manager = this;
         }
     }
     /// <summary>
