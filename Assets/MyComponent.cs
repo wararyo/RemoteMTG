@@ -19,6 +19,10 @@ public class MyComponent : MonoBehaviour {
     public RawImage UIImage;
     public Text text;
     public string IPAddress;
+    public List<ActiveTrackableInfo> trackables;
+    public LayoutGroup layoutGroup;
+    public GameObject UIImagePrefab;
+
 
     // The desired camera image pixel format
     private Vuforia.Image.PIXEL_FORMAT mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGBA8888;// or RGBA8888, RGB888, RGB565, YUV
@@ -26,6 +30,8 @@ public class MyComponent : MonoBehaviour {
     private bool mFormatRegistered = false;
     void Start()
     {
+        trackables = new List<ActiveTrackableInfo>();
+
         // Register Vuforia life-cycle callbacks:
         VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
         VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
@@ -77,6 +83,11 @@ public class MyComponent : MonoBehaviour {
                 "\n consider using a different pixel format.");
             mFormatRegistered = false;
         }
+
+        foreach (TrackableBehaviour tb in TrackerManager.Instance.GetStateManager().GetTrackableBehaviours())
+        {
+            tb.gameObject.AddComponent<MyTrackableEventHandler>();
+        }
     }
     /// <summary>
     /// Called when network is connected
@@ -89,15 +100,18 @@ public class MyComponent : MonoBehaviour {
     /// <param name="msg"></param>
     void getInfoTexture(NetworkMessage msg)
     {
-        Debug.Log("hoge");
+        //Debug.Log("hoge");
         TextureInfoMessage msg2 = msg.ReadMessage<TextureInfoMessage>();
-        text.text = "";
+        //text.text = "";
         // Iterate through the list of active trackables
-        text.text += "List of trackables currently active (tracked): \n";
+        //text.text += "List of trackables currently active (tracked): \n";
         foreach (ActiveTrackableInfo t in msg2.activeTrackables)
         {
-            text.text += "Trackable: " + t.name + "\n";
+            //text.text += "Trackable: " + t.name + "\n";
+
             Debug.Log("Trackable: " + t.name);
+            GameObject go = Instantiate(UIImagePrefab, layoutGroup.transform);
+            go.GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load("CardImages/"+t.name) as Sprite;
         }
         if (msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
     }
@@ -144,13 +158,12 @@ public class MyComponent : MonoBehaviour {
                     //Networking
 
                     // Get the Vuforia StateManager
-                    StateManager sm = TrackerManager.Instance.GetStateManager();
+                    /*StateManager sm = TrackerManager.Instance.GetStateManager();
                     IEnumerable<TrackableBehaviour> activeTrackables = sm.GetActiveTrackableBehaviours();
-                    List<ActiveTrackableInfo> trackables = new List<ActiveTrackableInfo>();
                     foreach (TrackableBehaviour tb in activeTrackables)
                     {
                         trackables.Add(new ActiveTrackableInfo(tb.Trackable.ID, tb.TrackableName, tb.transform));
-                    }
+                    }*/
 
                     TextureInfoMessage msg = new TextureInfoMessage(jpg, trackables);
 
@@ -171,6 +184,7 @@ public class MyComponent : MonoBehaviour {
                             
                         }
                     }
+                    trackables.Clear();
                     Debug.Log("hoge" + trackables.Count);
                 }
             }
