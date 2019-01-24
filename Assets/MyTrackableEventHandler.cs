@@ -9,6 +9,8 @@ public class MyTrackableEventHandler : DefaultTrackableEventHandler {
     protected override void OnTrackingFound()
     {
         base.OnTrackingFound();
+        Debug.Log("onTrackingFound");
         manager.trackables.Add(new ActiveTrackableInfo(mTrackableBehaviour.Trackable.ID, mTrackableBehaviour.TrackableName, mTrackableBehaviour.transform));
+        Debug.Log(manager.trackables);
     }
 }

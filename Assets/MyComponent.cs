@@ -185,7 +185,7 @@ public class MyComponent : MonoBehaviour {
                         }
                     }
                     trackables.Clear();
-                    Debug.Log("hoge" + trackables.Count);
+                    //Debug.Log("hoge" + trackables.Count);
                 }
             }
         }

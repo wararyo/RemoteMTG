@@ -17,7 +17,7 @@ public class TextureInfoMessage : MessageBase {
         base.Serialize(writer);
         writer.Write(textureData.Length);
         writer.Write(textureData,textureData.Length);
-        Debug.Log("Serialize");
+        //Debug.Log("Serialize");
         writer.Write(activeTrackables.Count);
         foreach(ActiveTrackableInfo ati in activeTrackables)
         {
@@ -28,10 +28,10 @@ public class TextureInfoMessage : MessageBase {
     {
         base.Deserialize(reader);
         textureData = reader.ReadBytes(reader.ReadInt32());
-        Debug.Log("ByteCount: " + textureData.Length);
+        //Debug.Log("ByteCount: " + textureData.Length);
         int count = reader.ReadInt32();
         activeTrackables = new List<ActiveTrackableInfo>(count);
-        Debug.Log("Count: " + count);
+        //Debug.Log("Count: " + count);
         for(int i = 0; i < count;i++)
             activeTrackables.Add(new ActiveTrackableInfo(reader.ReadInt32(), reader.ReadString(), reader.ReadTransform()));
     }
