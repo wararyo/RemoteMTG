@@ -19,6 +19,7 @@ public class MyComponent : MonoBehaviour {
     public RawImage UIImage;
     public Text text;
     public string IPAddress;
+    [System.NonSerialized]
     public List<ActiveTrackableInfo> trackables;
     public LayoutGroup layoutGroup;
     public GameObject UIImagePrefab;
@@ -111,7 +112,8 @@ public class MyComponent : MonoBehaviour {
 
             Debug.Log("Trackable: " + t.name);
             GameObject go = Instantiate(UIImagePrefab, layoutGroup.transform);
-            go.GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load("CardImages/"+t.name) as Sprite;
+            Sprite sprite = Resources.Load<Sprite>("CardImages/CracklingDrake");//"Assets/CardImages/" + t.name + ".jpg") as Sprite;
+            go.GetComponent<UnityEngine.UI.Image>().sprite = sprite;
         }
         if (msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
     }
@@ -148,11 +150,11 @@ public class MyComponent : MonoBehaviour {
                     imageInfo += " bufferSize: " + image.BufferWidth + " x " + image.BufferHeight + "\n";
                     imageInfo += " stride: " + image.Stride;
                     //Debug.Log(imageInfo);
-                    tex = new Texture2D(image.Width, image.Height, TextureFormat.RGB24, false);
+                    tex = new Texture2D(image.Width, image.Height, TextureFormat.RGB565, false);
                     tex.filterMode = FilterMode.Point;
                     image.CopyToTexture(tex);
                     tex.Apply();
-                    byte[] jpg = tex.EncodeToJPG(50);
+                    byte[] jpg = tex.EncodeToJPG(30);
                     //((Texture2D)(UIImage.texture)).LoadImage(jpg);
 
                     //Networking
@@ -165,11 +167,13 @@ public class MyComponent : MonoBehaviour {
                         trackables.Add(new ActiveTrackableInfo(tb.Trackable.ID, tb.TrackableName, tb.transform));
                     }*/
 
+                    if (trackables.Count > 0) Debug.Log("trackables.Count = " + trackables.Count);
+
                     TextureInfoMessage msg = new TextureInfoMessage(jpg, trackables);
 
                     if (isServer)
                     {
-                        if (NetworkServer.connections.Count > 0 && Time.time - lastTime > 0.04)
+                        if (NetworkServer.connections.Count > 0 && Time.time - lastTime > 0.1)
                         {
                             lastTime = Time.time;
                             NetworkServer.connections[1].SendByChannel(1000, msg, channel);
@@ -177,7 +181,7 @@ public class MyComponent : MonoBehaviour {
                     }
                     else
                     {
-                        if(myClient.connection.isConnected && Time.time - lastTime > 0.04)
+                        if(myClient.connection.isConnected && Time.time - lastTime > 0.1)
                         {
                             lastTime = Time.time;
                             myClient.SendByChannel(1000, msg, channel);
