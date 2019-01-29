@@ -23,6 +23,7 @@ public class MyComponent : MonoBehaviour {
     public List<ActiveTrackableInfo> trackables;
     public LayoutGroup layoutGroup;
     public GameObject UIImagePrefab;
+    public ScrollRect scrollRect;
 
 
     // The desired camera image pixel format
@@ -112,8 +113,11 @@ public class MyComponent : MonoBehaviour {
 
             Debug.Log("Trackable: " + t.name);
             GameObject go = Instantiate(UIImagePrefab, layoutGroup.transform);
+            go.transform.SetSiblingIndex(0);
             Sprite sprite = Resources.Load<Sprite>("CardImages/" + t.name);
             go.GetComponent<UnityEngine.UI.Image>().sprite = sprite;
+            layoutGroup.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
+            scrollRect.horizontalNormalizedPosition = 0;
         }
         if (msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
     }

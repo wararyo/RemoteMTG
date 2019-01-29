@@ -1360,6 +1360,7 @@ MonoBehaviour:
   layoutGroup: {fileID: 1257881571}
   UIImagePrefab: {fileID: 1816380171205074, guid: 4dce761f9e4d9478b91e608492085a4b,
     type: 2}
+  scrollRect: {fileID: 1380814935}
 --- !u!1 &2034982235
 GameObject:
   m_ObjectHideFlags: 0
@@ -1436,7 +1437,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2124653038}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.999929
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
