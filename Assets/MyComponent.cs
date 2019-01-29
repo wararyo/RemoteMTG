@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vuforia;
@@ -25,6 +25,8 @@ public class MyComponent : MonoBehaviour {
     public GameObject UIImagePrefab;
     public ScrollRect scrollRect;
 
+    List<string> trackedCardNames;
+
 
     // The desired camera image pixel format
     private Vuforia.Image.PIXEL_FORMAT mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGBA8888;// or RGBA8888, RGB888, RGB565, YUV
@@ -33,6 +35,7 @@ public class MyComponent : MonoBehaviour {
     void Start()
     {
         trackables = new List<ActiveTrackableInfo>();
+        trackedCardNames = new List<string>();
 
         // Register Vuforia life-cycle callbacks:
         VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
@@ -109,7 +112,8 @@ public class MyComponent : MonoBehaviour {
         //text.text += "List of trackables currently active (tracked): \n";
         foreach (ActiveTrackableInfo t in msg2.activeTrackables)
         {
-            //text.text += "Trackable: " + t.name + "\n";
+            if (!trackedCardNames.Contains(t.name))
+            {
 
             Debug.Log("Trackable: " + t.name);
             GameObject go = Instantiate(UIImagePrefab, layoutGroup.transform);
@@ -118,6 +122,7 @@ public class MyComponent : MonoBehaviour {
             go.GetComponent<UnityEngine.UI.Image>().sprite = sprite;
             layoutGroup.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
             scrollRect.horizontalNormalizedPosition = 0;
+            }
         }
         if (msg2.textureData.Length > 0) ((Texture2D)(UIImage.texture)).LoadImage(msg2.textureData);
     }
@@ -162,14 +167,6 @@ public class MyComponent : MonoBehaviour {
                     //((Texture2D)(UIImage.texture)).LoadImage(jpg);
 
                     //Networking
-
-                    // Get the Vuforia StateManager
-                    /*StateManager sm = TrackerManager.Instance.GetStateManager();
-                    IEnumerable<TrackableBehaviour> activeTrackables = sm.GetActiveTrackableBehaviours();
-                    foreach (TrackableBehaviour tb in activeTrackables)
-                    {
-                        trackables.Add(new ActiveTrackableInfo(tb.Trackable.ID, tb.TrackableName, tb.transform));
-                    }*/
 
                     if (trackables.Count > 0) Debug.Log("trackables.Count = " + trackables.Count);
 
