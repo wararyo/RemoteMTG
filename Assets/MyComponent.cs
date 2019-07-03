@@ -34,6 +34,7 @@ public class MyComponent : MonoBehaviour {
     private bool mFormatRegistered = false;
     void Start()
     {
+        Display.displays[0].Activate();
         trackables = new List<ActiveTrackableInfo>();
         trackedCardNames = new List<string>();
 
